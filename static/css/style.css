@@ -1,0 +1,472 @@
+/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow: hidden;
+}
+
+#game-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #1a1a1a;
+}
+
+#search-bar {
+    position: absolute;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 400px;
+    z-index: 3;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+#search-bar input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    font-size: 16px;
+}
+
+#map-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: white;
+}
+
+#mapbox-map {
+    width: 100%;
+    height: 100%;
+}
+
+/* Mapbox Controls Styling */
+.mapboxgl-ctrl-group {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    border-radius: 8px !important;
+}
+
+.mapboxgl-ctrl-group button {
+    width: 30px;
+    height: 30px;
+    background-color: transparent !important;
+    color: white !important;
+}
+
+.mapboxgl-ctrl-group button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Panel Styles */
+.panel {
+    background-color: rgba(42, 42, 42, 0.9);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Main Menu */
+#main-menu {
+    min-width: 400px;
+    z-index: 1000;
+}
+
+#main-menu h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #4CAF50;
+    text-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+/* Map Selection */
+.map-selection {
+    width: 100%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+#map-preview {
+    width: 100%;
+    height: 400px;
+    margin: 20px 0;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid #4a4a4a;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Override Mapbox styles for a more traditional look */
+.mapboxgl-map {
+    width: 100%;
+    height: 100%;
+}
+
+.map-controls {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+}
+
+.map-controls input {
+    flex: 1;
+}
+
+.map-info {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+.map-info p {
+    margin: 0.5rem 0;
+    font-family: monospace;
+}
+
+#location-search {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+#search-btn {
+    padding: 8px 16px;
+    background: #4CAF50;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+
+#search-btn:hover {
+    background: #45a049;
+}
+
+/* Input Groups */
+.input-group {
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #aaa;
+}
+
+/* Settings Groups */
+.settings-group {
+    margin: 1rem 0;
+    text-align: left;
+}
+
+.settings-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #aaa;
+}
+
+select {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: #3a3a3a;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+select:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+/* Buttons */
+button {
+    background-color: rgba(76, 175, 80, 0.9);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background-color: rgba(76, 175, 80, 1);
+    transform: translateY(-2px);
+}
+
+/* Input Fields */
+input[type="text"] {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.5rem 0;
+    border: none;
+    border-radius: 5px;
+    background-color: #3a3a3a;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+input[type="text"]:focus {
+    background-color: #444;
+    outline: none;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+}
+
+/* Game Panel */
+#game-panel {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+#game-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 3;
+}
+
+#game-header span {
+    font-size: 1.2em;
+    margin: 0 10px;
+}
+
+#game-content {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#three-container {
+    display: none;
+}
+
+#map-overview {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    height: 300px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+#building-menu {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 15px;
+    border-radius: 10px;
+    z-index: 3;
+}
+
+.building-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: white;
+    background-color: #2c3e50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.building-btn:hover {
+    background-color: #34495e;
+}
+
+.building-btn.selected {
+    background-color: #27ae60;
+}
+
+#game-controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px;
+    border-radius: 10px;
+    z-index: 3;
+}
+
+#game-controls button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: white;
+    background-color: #2c3e50;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#game-controls button:hover {
+    background-color: #34495e;
+}
+
+#pause-btn, #speed-btn {
+    font-size: 1.5em;
+    padding: 5px 15px;
+}
+
+/* Building Preview */
+.building-preview {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Save Slots */
+#save-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.save-slot {
+    background-color: rgba(51, 51, 51, 0.9);
+    padding: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.save-slot:hover {
+    background-color: #444;
+    transform: translateY(-2px);
+}
+
+/* Mini Menu */
+#mini-menu {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #map-overview {
+        width: 200px;
+        height: 200px;
+    }
+
+    #game-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #game-header span {
+        margin: 5px 0;
+    }
+
+    #building-menu {
+        right: 10px;
+        padding: 10px;
+    }
+
+    .building-btn {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    #game-controls {
+        bottom: 10px;
+        padding: 5px;
+    }
+
+    #game-controls button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    #map-preview {
+        height: 300px;
+    }
+    
+    .map-selection {
+        margin: 10px;
+        padding: 15px;
+    }
+}
+
+#map-controls {
+    height: 50px;
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+#select-location {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background: #27ae60;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#select-location:hover {
+    background: #219a52;
+} 

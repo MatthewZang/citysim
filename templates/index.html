@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vancouver City Simulator</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body { margin: 0; padding: 0; }
+        #game-stats {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+        }
+        #city-map {
+            width: 100%;
+            height: calc(100vh - 60px);
+            margin-top: 60px;
+            cursor: pointer;
+        }
+        #building-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .building-btn {
+            padding: 8px 16px;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        .building-btn.selected {
+            background: #4CAF50;
+            color: white;
+        }
+        .building-marker {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .building-marker i {
+            font-size: 24px;
+        }
+        .residential i { 
+            color: #2196F3; 
+        }
+        .commercial i { 
+            color: #FF9800; 
+        }
+        .industrial i { 
+            color: #795548; 
+        }
+        .building-level {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: white;
+            border-radius: 50%;
+            width: 15px;
+            height: 15px;
+            font-size: 12px;
+            line-height: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-stats">
+        Budget: $<span id="budget">10000</span> 
+        Population: <span id="population">0</span> 
+        Happiness: <span id="happiness">100</span>% 
+        Day <span id="day">1</span> - <span id="time">00:00</span>
+    </div>
+    
+    <div id="city-map"></div>
+    
+    <div id="building-controls">
+        <button class="building-btn" data-type="residential" data-cost="1000">Residential ($1000)</button>
+        <button class="building-btn" data-type="commercial" data-cost="2000">Commercial ($2000)</button>
+        <button class="building-btn" data-type="industrial" data-cost="3000">Industrial ($3000)</button>
+        <button onclick="saveGame()">Save Game</button>
+        <button>Settings</button>
+        <button>Menu</button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        let budget = 10000;
+        let selectedBuildingType = null;
+        let buildings = [];
+        
+        // Initialize the map centered on Vancouver
+        const map = L.map('city-map').setView([49.2827, -123.1207], 14);
+
+        // Add the OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Building selection
+        document.querySelectorAll('.building-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const cost = parseInt(btn.dataset.cost);
+                if (budget >= cost) {
+                    selectedBuildingType = btn.dataset.type;
+                    document.querySelectorAll('.building-btn').forEach(b => b.classList.remove('selected'));
+                    btn.classList.add('selected');
+                } else {
+                    alert('Not enough money!');
+                }
+            });
+        });
+
+        // Add this function to check buildable areas
+        function isValidBuildingZone(latlng) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 1;
+                canvas.height = 1;
+                const ctx = canvas.getContext('2d');
+
+                const tileUrl = map.getContainer().querySelector('.leaflet-tile-loaded').src;
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+                
+                img.onload = () => {
+                    ctx.drawImage(img, 0, 0, 1, 1);
+                    const pixel = ctx.getImageData(0, 0, 1, 1).data;
+                    
+                    // Check if the color matches buildable areas (specific gray)
+                    const isGrayArea = (
+                        pixel[0] >= 214 && pixel[0] <= 234 && // Red: ~224 ±10
+                        pixel[1] >= 202 && pixel[1] <= 222 && // Green: ~212 ±10
+                        pixel[2] >= 194 && pixel[2] <= 214    // Blue: ~204 ±10
+                    );
+                    
+                    console.log('Pixel color:', pixel[0], pixel[1], pixel[2]);
+                    console.log('Is gray area:', isGrayArea);
+                    
+                    resolve(isGrayArea);
+                };
+                img.src = tileUrl;
+            });
+        }
+
+        // Update the map click handler
+        map.on('click', async (e) => {
+            if (selectedBuildingType) {
+                const cost = parseInt(document.querySelector(`[data-type="${selectedBuildingType}"]`).dataset.cost);
+                if (budget >= cost) {
+                    const canBuild = await isValidBuildingZone(e.latlng);
+                    if (canBuild) {
+                        placeBuilding(e.latlng, selectedBuildingType, 1);
+                        updateBudget(-cost);
+                    }
+                }
+            }
+        });
+
+        function placeBuilding(latlng, type, level) {
+            const iconClass = {
+                residential: 'fa-home',
+                commercial: 'fa-store',
+                industrial: 'fa-industry'
+            }[type];
+
+            const marker = L.marker(latlng, {
+                icon: L.divIcon({
+                    className: `building-marker ${type}`,
+                    html: `
+                        <i class="fas ${iconClass}"></i>
+                        <span class="building-level">${level}</span>
+                    `,
+                    iconSize: [30, 30]
+                })
+            }).addTo(map);
+
+            const building = {
+                marker: marker,
+                type: type,
+                level: level,
+                income: getIncome(type, level),
+                latlng: latlng
+            };
+
+            buildings.push(building);
+
+            // Add click handler for upgrades
+            marker.on('click', () => upgradeBuilding(building));
+        }
+
+        function upgradeBuilding(building) {
+            const upgradeCost = getUpgradeCost(building.type, building.level);
+            if (budget >= upgradeCost && building.level < 3) {
+                updateBudget(-upgradeCost);
+                building.level++;
+                building.income = getIncome(building.type, building.level);
+                building.marker.setIcon(L.divIcon({
+                    className: `building-marker ${building.type}`,
+                    html: `
+                        <i class="fas ${iconClass}"></i>
+                        <span class="building-level">${building.level}</span>
+                    `,
+                    iconSize: [30, 30]
+                }));
+            } else if (building.level >= 3) {
+                alert('Maximum level reached!');
+            } else {
+                alert('Not enough money for upgrade!');
+            }
+        }
+
+        function getUpgradeCost(type, level) {
+            const baseCost = {
+                residential: 1000,
+                commercial: 2000,
+                industrial: 3000
+            }[type];
+            return baseCost * (level + 1);
+        }
+
+        function getIncome(type, level) {
+            const baseIncome = {
+                residential: 100,
+                commercial: 200,
+                industrial: 300
+            }[type];
+            return baseIncome * level;
+        }
+
+        function updateBudget(amount) {
+            budget += amount;
+            document.getElementById('budget').textContent = budget;
+        }
+
+        // Game loop - collect income every 10 seconds
+        setInterval(() => {
+            let totalIncome = buildings.reduce((sum, building) => sum + building.income, 0);
+            updateBudget(totalIncome);
+        }, 10000);
+    </script>
+</body>
+</html> 
