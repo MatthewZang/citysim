@@ -1,6 +1,38 @@
-# City Mayor Simulator
+# Vancouver City Simulator
 
-A 3D city-building simulation game where you take on the role of a city mayor. Manage your city's resources, make important decisions, and watch your city grow!
+A web-based city simulation game where players can build and manage their own version of Vancouver. Build residential, commercial, and industrial zones while managing your city's budget and population.
+
+## Features
+
+- Interactive map centered on Vancouver using OpenStreetMap
+- Three building types: Residential, Commercial, and Industrial
+- Building upgrade system with multiple levels
+- Real-time income generation
+- Budget management system
+- Building placement validation based on map zones
+
+## Setup
+
+1. Clone this repository
+2. Open `templates/index.html` in a web browser
+3. Start building your city!
+
+## How to Play
+
+- Select a building type from the bottom menu
+- Click on valid building zones (gray areas) on the map to place buildings
+- Click existing buildings to upgrade them (up to level 3)
+- Manage your budget while expanding your city
+- Collect income from your buildings every 10 seconds
+
+## Technologies Used
+
+- HTML5
+- CSS3
+- JavaScript
+- Leaflet.js for map rendering
+- Font Awesome for icons
+- OpenStreetMap for map data
 
 ## Features (Planned)
 - 3D city visualization
